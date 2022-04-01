@@ -13,9 +13,7 @@ const ParticlesEffect = () => {
     // you can initialize the tsParticles instance (main) here, adding custom shapes or presets
   }
 
-  const particlesLoaded = (container) => {
-    console.log(container)
-  }
+  const particlesLoaded = (container) => {}
   return (
     <Particles
       id="tsparticles"

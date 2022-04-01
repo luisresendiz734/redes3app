@@ -1,4 +1,4 @@
-import { Box, Center, Container, Heading } from "@chakra-ui/react"
+import { Box, Center, Container, Heading, useColorMode } from "@chakra-ui/react"
 import DisplayTopology from "./DisplayTopology"
 import pc from "../../assets/pc.png"
 import router from "../../assets/router.png"
@@ -9,6 +9,8 @@ import { edgesRef, nodesRef } from "../../services/firebase/database"
 const Topology = () => {
   const [nodes, setNodes] = useState([])
   const [edges, setEdges] = useState([])
+  const { colorMode } = useColorMode()
+  const viewColor = colorMode == "dark" ? "#ffffff" : "#00000"
 
   useEffect(() => {
     onValue(nodesRef, (snapshot) => {
@@ -27,19 +29,20 @@ const Topology = () => {
         setNodes([])
       }
     })
-  }, [])
+  }, [colorMode])
 
   useEffect(() => {
     onValue(edgesRef, (snapshot) => {
       const data = snapshot.val()
       console.log("edges snapshot:", data)
       if (data?.length) {
-        setEdges(data)
+        const newEdges = data.map((d) => ({ ...d, color: viewColor }))
+        setEdges(newEdges)
       } else {
         setEdges([])
       }
     })
-  }, [])
+  }, [colorMode])
 
   return (
     <Box>
