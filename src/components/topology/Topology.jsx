@@ -2,23 +2,45 @@ import { Box, Center, Container, Heading } from "@chakra-ui/react"
 import DisplayTopology from "./DisplayTopology"
 import pc from "../../assets/pc.png"
 import router from "../../assets/router.png"
-
-const nodes = [
-  { id: 1, label: "Node 1", image: router, shape: "image" },
-  { id: 2, label: "Node 2", image: router, shape: "image" },
-  { id: 3, label: "Node 3", image: pc, shape: "image" },
-  { id: 4, label: "Node 4", image: pc, shape: "image" },
-  { id: 5, label: "Node 5", image: pc, shape: "image" },
-]
-
-const edges = [
-  { from: 1, to: 3 },
-  { from: 1, to: 2 },
-  { from: 2, to: 4 },
-  { from: 2, to: 5 },
-]
+import { useEffect, useState } from "react"
+import { onValue } from "firebase/database"
+import { edgesRef, nodesRef } from "../../services/firebase/database"
 
 const Topology = () => {
+  const [nodes, setNodes] = useState([])
+  const [edges, setEdges] = useState([])
+
+  useEffect(() => {
+    onValue(nodesRef, (snapshot) => {
+      const data = snapshot.val()
+      console.log("nodes snapshot", data)
+      if (data?.length) {
+        const newNodes = data.map((d) => {
+          if (d.label.includes("R")) {
+            return { ...d, image: router, shape: "image" }
+          }
+
+          return { ...d, image: pc, shape: "image" }
+        })
+        setNodes(newNodes)
+      } else {
+        setNodes([])
+      }
+    })
+  }, [])
+
+  useEffect(() => {
+    onValue(edgesRef, (snapshot) => {
+      const data = snapshot.val()
+      console.log("edges snapshot:", data)
+      if (data?.length) {
+        setEdges(data)
+      } else {
+        setEdges([])
+      }
+    })
+  }, [])
+
   return (
     <Box>
       <Container maxW="container.xl">

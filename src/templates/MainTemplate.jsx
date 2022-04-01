@@ -13,6 +13,7 @@ import {
 import { useAuth } from "../context/AuthContext"
 import { Link as RouteLink } from "react-router-dom"
 import { MoonIcon, SunIcon } from "@chakra-ui/icons"
+import ParticlesEffect from "./ParticlesEffect"
 
 function MainTemplate({ children }) {
   const auth = useAuth()
@@ -20,7 +21,7 @@ function MainTemplate({ children }) {
 
   return (
     <Box>
-      <Box boxShadow="md">
+      <Box boxShadow="md" backgroundColor="whiteAlpha.200" backdropBlur="10px">
         <Container maxW="container.xl">
           <Box
             display="flex"
@@ -81,7 +82,10 @@ function MainTemplate({ children }) {
           </Box>
         </Container>
       </Box>
-      <Box>{children}</Box>
+      <Box>
+        <ParticlesEffect />
+        {children}
+      </Box>
     </Box>
   )
 }
