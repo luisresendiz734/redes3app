@@ -10,6 +10,9 @@ import {
 import { set } from "firebase/database"
 import { edgesRef, nodesRef } from "../../services/firebase/database"
 import luis from "../../assets/luis.png"
+import alo from "../../assets/alo.png"
+import alfredo from "../../assets/alfredo.png"
+import buzany from "../../assets/buzany.png"
 
 const nodes = [
   { id: 1, label: "Router 1" },
@@ -27,10 +30,10 @@ const edges = [
 ]
 
 const partners = [
+  { fullname: "Isai Buzani", block: "A", img: buzany },
+  { fullname: "Alondra Gasca Leon", block: "A", img: alo },
+  { fullname: "Alfredo Pereda Reyes", block: "B", img: alfredo },
   { fullname: "Luis Fernando Resendiz Chavez", block: "B", img: luis },
-  { fullname: "Alondra Gasca Leon", block: "A", img: luis },
-  { fullname: "Isai Buzani", block: "A", img: luis },
-  { fullname: "Alfredo Pereda Reyes", block: "B", img: luis },
 ]
 
 const Home = () => {
