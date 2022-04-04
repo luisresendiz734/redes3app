@@ -1,4 +1,4 @@
-import { Box, Button, Center, Container, FormControl, FormLabel, Input, Select, Slider, SliderFilledTrack, SliderMark, SliderThumb, SliderTrack, Text } from "@chakra-ui/react"
+import { Box, Button, Center, Container, FormControl, FormLabel, Input, Select, Slider, SliderFilledTrack, SliderMark, SliderThumb, SliderTrack, Text, useToast } from "@chakra-ui/react"
 import { child, get, set } from "firebase/database";
 import { useState } from "react"
 import { routersRef, userRef } from "../../services/firebase/database";
@@ -9,13 +9,13 @@ const Users = () => {
   const [metodo, setMetodo] = useState("telnet");
   const [privilegio, setPrivilegio] = useState(1);
 
+  const toast = useToast();
+
   const handleSubmit = async () => {
     const routersSnapshot = await get(child(routersRef, "/"))
     if(routersSnapshot.exists()) {
       const routersObj = routersSnapshot.val();
       const routerNames = Object.keys(routersObj);
-      console.log(routerNames);
-      console.log(routersObj);
       routerNames.forEach(routerName => {
         routersObj[routerName].username = usuario
         routersObj[routerName].password = password
@@ -25,6 +25,7 @@ const Users = () => {
 
       await set(routersRef, routersObj);
     }
+    
     const user = {
       usuario,
       password,
@@ -32,6 +33,14 @@ const Users = () => {
       privilegio
     }
     await set(userRef, user);
+
+    toast({
+      title: "Usuario guardado",
+      description: "Usuario actualizado en la base de datos satisfactoriamente",
+      status: "success",
+      duration: 8000,
+      isClosable: true
+    })
   }
 
   return (
