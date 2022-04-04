@@ -1,9 +1,11 @@
 import { Box, Button, Center, Container, FormControl, FormLabel, Input, Select, Slider, SliderFilledTrack, SliderMark, SliderThumb, SliderTrack, Text, useToast } from "@chakra-ui/react"
-import { child, get, set } from "firebase/database";
-import { useState } from "react"
+import { child, get, onValue, set } from "firebase/database";
+import { useEffect, useState } from "react"
 import { routersRef, userRef } from "../../services/firebase/database";
 
 const Users = () => {
+  const [router, setRouter] = useState("");
+  const [routers, setRouters] = useState({});
   const [usuario, setUsuario] = useState("");
   const [password, setPassword] = useState("");
   const [metodo, setMetodo] = useState("telnet");
@@ -11,21 +13,22 @@ const Users = () => {
 
   const toast = useToast();
 
-  const handleSubmit = async () => {
-    const routersSnapshot = await get(child(routersRef, "/"))
-    if(routersSnapshot.exists()) {
-      const routersObj = routersSnapshot.val();
-      const routerNames = Object.keys(routersObj);
-      routerNames.forEach(routerName => {
-        routersObj[routerName].username = usuario
-        routersObj[routerName].password = password
-        routersObj[routerName].metodo = metodo
-        routersObj[routerName].privilegios = privilegio
-      })
+  const clearValues = () => {
+    setUsuario("")
+    setPassword("")
+    setPrivilegio("1")
+  }
 
-      await set(routersRef, routersObj);
-    }
-    
+  const handleSubmit = async () => {
+    const currentRouters = {...routers};
+
+    currentRouters[router].username = usuario
+    currentRouters[router].password = password
+    currentRouters[router].metodo = metodo
+    currentRouters[router].privilegios = privilegio
+
+    await set(routersRef, currentRouters);
+
     const user = {
       usuario,
       password,
@@ -41,13 +44,32 @@ const Users = () => {
       duration: 8000,
       isClosable: true
     })
+
+    clearValues();
   }
+
+  useEffect(() => {
+    onValue(routersRef, (snapshot) => {
+      if(snapshot.exists()) {
+        const newRouters = snapshot.val();
+        setRouters(newRouters);
+      }
+    })
+  }, [])
 
   return (
     <Box>
       <Container maxW="container.xl">
         <Center>
         <Box boxShadow='md' p='6' rounded='md' bg='whiteAlpha.200' w="400px" mt="12">
+          <FormControl mb="4">
+            <FormLabel>Router:</FormLabel>
+            <Select value={router} onChange={(e) => setRouter(e.target.value)}>
+              {Object.keys(routers).length > 0 && Object.keys(routers).map(rname => (
+                <option key={rname} value={rname}>{rname}</option>
+              ))}
+            </Select>
+          </FormControl>
           <FormControl mb="4">
             <FormLabel>Usuario:</FormLabel>
             <Input placeholder='Usuario' value={usuario} onChange={(e) => setUsuario(e.target.value)} />
