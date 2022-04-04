@@ -31,7 +31,7 @@ const ParticlesEffect = () => {
               opacity: 0.01,
               color: viewColor,
             },
-            opacity: 0.3,
+            opacity: colorMode == "dark" ? 0.3 : 0.1,
             color: viewColor,
           },
           move: {

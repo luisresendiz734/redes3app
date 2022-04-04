@@ -83,7 +83,7 @@ function MainTemplate({ children }) {
         </Container>
       </Box>
       <Box>
-        {/* <ParticlesEffect /> */}
+        <ParticlesEffect />
         {children}
       </Box>
     </Box>

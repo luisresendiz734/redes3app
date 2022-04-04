@@ -86,15 +86,18 @@ const Users = () => {
             </Select>
           </FormControl>
           <FormControl mb="8">
-            <FormLabel>Privilegio:</FormLabel>
+            <FormLabel mb="8">Privilegio:</FormLabel>
             <Slider value={privilegio} onChange={(value) => setPrivilegio(value)} min={1} max={15} step={1}>
               <SliderMark
                 value={privilegio}
                 textAlign='center'
                 bg='blue.500'
                 color='white'
-                mt='+30'
+                mt='-8'
+                ml="-6"
                 w='12'
+                rounded="3xl"
+                p={0}
               >
                 {privilegio}
               </SliderMark>
